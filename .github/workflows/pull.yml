@@ -109,7 +109,7 @@ jobs:
         DTYPE=${{ matrix.dtype }}
         BUILD_TOOL="cmake"
         MODE=${{ matrix.mode }}
-        ARTIFACTS_DIR_NAME="artifacts-to-be-uploaded"
+        ARTIFACTS_DIR_NAME="artifacts-to-be-uploaded/${DTYPE}-${MODE}"
 
         # Setup executorch
         PYTHON_EXECUTABLE=python bash .ci/scripts/setup-linux.sh cmake
