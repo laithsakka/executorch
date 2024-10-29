@@ -121,6 +121,21 @@ def define_libs():
             exported_headers = native.glob([
                 "blas/**/*.h",
             ]),
+            compiler_flags = select({
+              "DEFAULT": [],
+              "ovr_config//os:android-arm64": [
+                    "-O2",
+              ] if not runtime.is_oss else [],
+              "ovr_config//os:iphoneos": [
+                  "-O2",
+              ] if not runtime.is_oss else [],
+              "ovr_config//os:macos-arm64": [
+                  "-O2",
+              ] if not runtime.is_oss else [],
+              "ovr_config//os:macos-x86_64": [
+                  "-O2",
+              ] if not runtime.is_oss else [],
+            }),
             header_namespace = "executorch/kernels/optimized",
             visibility = [
                 "//executorch/...",
