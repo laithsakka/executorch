@@ -34,7 +34,21 @@ def define_common_targets():
                 "//executorch/kernels/portable/cpu/util:reduce_util",
                 "//executorch/extension/llm/custom_ops/spinquant:fast_hadamard_transform",
             ],
-            compiler_flags = ["-Wno-missing-prototypes", "-Wno-global-constructors"],
+            compiler_flags = ["-Wno-missing-prototypes", "-Wno-global-constructors"] + select({
+              "DEFAULT": [],
+              "ovr_config//os:android-arm64": [
+                    "-O2",
+              ] if not runtime.is_oss else [],
+              "ovr_config//os:iphoneos": [
+                  "-O2",
+              ] if not runtime.is_oss else [],
+              "ovr_config//os:macos-arm64": [
+                  "-O2",
+              ] if not runtime.is_oss else [],
+              "ovr_config//os:macos-x86_64": [
+                  "-O2",
+              ] if not runtime.is_oss else [],
+            }),
             visibility = [
                 "//executorch/...",
                 "//executorch/extension/llm/custom_ops/...",
