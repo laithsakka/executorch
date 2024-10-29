@@ -132,7 +132,21 @@ def define_op_library(name, deps, android_deps, aten_target, _allow_third_party_
             # library, and it blocks users like unit tests to use kernel
             # implementation directly. So we enable this for xplat only.
             ["-fvisibility=hidden"] if is_xplat() else []
-        ),
+        ) + select({
+            "DEFAULT": [],
+            "ovr_config//os:android-arm64": [
+                  "-O2",
+            ] if not runtime.is_oss else [],
+            "ovr_config//os:iphoneos": [
+                "-O2",
+            ] if not runtime.is_oss else [],
+            "ovr_config//os:macos-arm64": [
+                "-O2",
+            ] if not runtime.is_oss else [],
+            "ovr_config//os:macos-x86_64": [
+                "-O2",
+            ] if not runtime.is_oss else [],
+          }),
         deps = [
             "//executorch/runtime/kernel:kernel_includes" + aten_suffix,
         ] + deps,
